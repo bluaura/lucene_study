@@ -1,16 +1,14 @@
 package com.example.lucene;
 
-import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
+import org.apache.lucene.document.Field;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
-import org.apache.lucene.index.IndexWriterConfig.OpenMode;
-import org.apache.lucene.queryparser.classic.ParseException;
+import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
@@ -19,27 +17,25 @@ import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.ByteBuffersDirectory;
 import org.apache.lucene.store.Directory;
 
-import java.io.IOException;
-
-public class LuceneExample {
-    public static void main(String[] args) throws IOException {
-        // 0. Specify the analyzer for tokenizing text.
-        // The same analyzer should be used for indexing and searching
+public class UpdateDocExample {
+    public static void main(String[] args) throws Exception {
         StandardAnalyzer analyzer = new StandardAnalyzer();
-
-        // 1. create the index
         Directory index = new ByteBuffersDirectory();
-        IndexWriterConfig config = new IndexWriterConfig(analyzer);
 
-        IndexWriter w = new IndexWriter(index, config);
-        addDoc(w, "Lucene in Action", "193398817");
-        addDoc(w, "Lucene for Dummies", "55320055Z");
-        addDoc(w, "Managing Gigabytes", "55063554A");
-        addDoc(w, "The Art of Computer Science", "9900333X");
-        w.close();
+        IndexWriterConfig config = new IndexWriterConfig(analyzer);
+        IndexWriter writer = new IndexWriter(index, config);
+
+        // 문서 추가
+        addDoc(writer, "Lucene in Action", "193398817");
+        addDoc(writer, "Lucene for Dummies", "55320055Z");
+
+        // 문서 업데이트
+        updateDoc(writer, "Lucene for Dummies", "Lucene for Experts", "55320055Z");
+
+        writer.close();
 
         // 2. query
-        String queryString = args.length > 0 ? args[0] : "art OR lucene";
+        String queryString = args.length > 0 ? args[0] : "Experts OR lucene";
 
         // the "title" arg specifies the default field to use
         // when no field is explicitly specified in the query.
@@ -70,12 +66,23 @@ public class LuceneExample {
         reader.close();
     }
 
-    private static void addDoc(IndexWriter w, String title, String isbn) throws IOException {
+    private static void addDoc(IndexWriter w, String title, String isbn) throws Exception {
         Document doc = new Document();
         doc.add(new TextField("title", title, Field.Store.YES));
-
-        // use a string field for isbn because we don't want it tokenized
         doc.add(new StringField("isbn", isbn, Field.Store.YES));
         w.addDocument(doc);
+    }
+
+    private static void updateDoc(IndexWriter w, String oldTitle, String newTitle, String isbn) throws Exception {
+        // 업데이트할 문서의 식별 필드(term)를 생성합니다.
+        Term term = new Term("isbn", isbn);
+
+        // 새 문서를 생성합니다.
+        Document doc = new Document();
+        doc.add(new TextField("title", newTitle, Field.Store.YES));
+        doc.add(new StringField("isbn", isbn, Field.Store.YES));
+
+        // 문서를 업데이트합니다.
+        w.updateDocument(term, doc);
     }
 }
