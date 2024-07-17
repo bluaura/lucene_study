@@ -19,6 +19,7 @@ import org.apache.lucene.store.Directory;
 
 import java.io.IOException;
 
+/*
 public class CustomAnalyzerExampleWhiteSpace {
     public static void main(String[] args) throws Exception {
         Analyzer analyzer = new CustomKoreanAnalyzerWhiteSpace();
@@ -63,3 +64,4 @@ public class CustomAnalyzerExampleWhiteSpace {
     }
 
 }
+*/
