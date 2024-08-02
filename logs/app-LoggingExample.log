@@ -1,0 +1,21 @@
+2024-08-02 13:16:54 [main] DEBUG com.example.logger.LoggingExample - This is a debug message
+2024-08-02 13:16:54 [main] INFO  com.example.logger.LoggingExample - This is an info message
+2024-08-02 13:16:54 [main] WARN  com.example.logger.LoggingExample - This is a warn message
+2024-08-02 13:16:54 [main] ERROR com.example.logger.LoggingExample - This is an error message
+2024-08-02 13:16:54 [main] ERROR com.example.logger.LoggingExample - Exception caught
+java.lang.Exception: Test exception
+	at com.example.logger.MdcLoggingExample.main(MdcLoggingExample.java:20)
+2024-08-02 13:17:39 [main] DEBUG com.example.logger.LoggingExample - This is a debug message
+2024-08-02 13:17:39 [main] INFO  com.example.logger.LoggingExample - This is an info message
+2024-08-02 13:17:39 [main] WARN  com.example.logger.LoggingExample - This is a warn message
+2024-08-02 13:17:39 [main] ERROR com.example.logger.LoggingExample - This is an error message
+2024-08-02 13:17:39 [main] ERROR com.example.logger.LoggingExample - Exception caught
+java.lang.Exception: Test exception
+	at com.example.logger.MdcLoggingExample.main(MdcLoggingExample.java:20)
+2024-08-02 13:17:52 [main] DEBUG com.example.logger.LoggingExample - This is a debug message
+2024-08-02 13:17:52 [main] INFO  com.example.logger.LoggingExample - This is an info message
+2024-08-02 13:17:52 [main] WARN  com.example.logger.LoggingExample - This is a warn message
+2024-08-02 13:17:52 [main] ERROR com.example.logger.LoggingExample - This is an error message
+2024-08-02 13:17:52 [main] ERROR com.example.logger.LoggingExample - Exception caught
+java.lang.Exception: Test exception
+	at com.example.logger.MdcLoggingExample.main(MdcLoggingExample.java:20)

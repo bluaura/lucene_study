@@ -1,0 +1,7 @@
+2024-08-02 13:12:45 [main] DEBUG com.example.logger.LoggingExample - This is a debug message
+2024-08-02 13:12:45 [main] INFO  com.example.logger.LoggingExample - This is an info message
+2024-08-02 13:12:45 [main] WARN  com.example.logger.LoggingExample - This is a warn message
+2024-08-02 13:12:45 [main] ERROR com.example.logger.LoggingExample - This is an error message
+2024-08-02 13:12:45 [main] ERROR com.example.logger.LoggingExample - Exception caught
+java.lang.Exception: Test exception
+	at com.example.logger.MdcLoggingExample.main(MdcLoggingExample.java:19)
