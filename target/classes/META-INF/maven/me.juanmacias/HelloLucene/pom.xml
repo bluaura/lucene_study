@@ -81,6 +81,17 @@
 			<version>9.10.0</version>
 		</dependency>
 
+        <dependency>
+            <groupId>org.apache.tika</groupId>
+            <artifactId>tika-core</artifactId>
+            <version>1.28.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tika</groupId>
+            <artifactId>tika-parsers</artifactId>
+            <version>1.28.2</version>
+        </dependency>
+
 		<!-- SLF4J API -->
         <dependency>
             <groupId>org.slf4j</groupId>
