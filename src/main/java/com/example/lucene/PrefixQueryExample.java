@@ -16,7 +16,7 @@ import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.store.ByteBuffersDirectory;
 import org.apache.lucene.store.Directory;
 
-public class SubstringExample {
+public class PrefixQueryExample {
     public static void main(String[] args) throws Exception {
         // 1. StandardAnalyzer 생성
         StandardAnalyzer analyzer = new StandardAnalyzer();
@@ -31,10 +31,14 @@ public class SubstringExample {
         addDoc(writer, "Lucene is a powerful search library");
         addDoc(writer, "Lucene supports prefix queries");
         addDoc(writer, "This is a simple example");
+        // 한글 문서 추가
+        addDoc(writer, "문서 추가: 예제 문서를 인덱스에 추가합니다. 이 문서들은 검색 시 사용됩니다.");
+        addDoc(writer, "쿼리 실행: PrefixQuery를 실행하여 결과를 얻습니다.");
+        addDoc(writer, "결과 출력: 검색된 결과를 출력합니다. 각 문서는 Document 객체로 표현되며, 필드 값을 가져와 출력할 수 있습니다.");
         writer.close();
 
         // 5. PrefixQuery 생성
-        String prefix = "lu";
+        String prefix = "얻";
         Query q = new PrefixQuery(new Term("content", prefix));
 
         // 6. 인덱스를 검색하기 위해 DirectoryReader와 IndexSearcher 생성

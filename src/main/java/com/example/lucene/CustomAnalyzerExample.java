@@ -18,6 +18,8 @@ import org.apache.lucene.store.ByteBuffersDirectory;
 import org.apache.lucene.store.Directory;
 
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class CustomAnalyzerExample {
     public static void main(String[] args) throws Exception {
