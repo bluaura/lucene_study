@@ -11,10 +11,12 @@ import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.ByteBuffersDirectory;
 import org.apache.lucene.store.Directory;
@@ -30,7 +32,6 @@ import java.io.StringReader;
 import java.nio.file.Paths;
 
 public class MultiFormatIndexer {
-
     private static void indexDocument(Directory index, File file) throws Exception {
         Analyzer analyzer = new StandardAnalyzer();
         IndexWriterConfig config = new IndexWriterConfig(analyzer);
@@ -62,6 +63,22 @@ public class MultiFormatIndexer {
         writer.addDocument(doc);
         writer.close();
         }
+
+    public static void deleteDocumentByFilename(Directory index, String filename) throws Exception {
+        Analyzer analyzer = new StandardAnalyzer();
+        IndexWriterConfig config = new IndexWriterConfig(analyzer);
+        IndexWriter writer = new IndexWriter(index, config);
+
+        // 파일명을 기반으로 한 TermQuery를 사용하여 인덱스에서 해당 문서 삭제
+        Term term = new Term("filename", filename);
+        Query query = new TermQuery(term);
+        
+        // 문서 삭제
+        writer.deleteDocuments(query);
+        writer.commit(); // 삭제된 내용을 인덱스에 반영
+        System.out.println("Document with filename '" + filename + "' deleted.");
+        writer.close();
+    }
 
     // 텍스트를 분석하고 토큰화된 결과를 출력하는 함수
     private static void analyzeText(Analyzer analyzer, String text) throws IOException {
@@ -109,7 +126,7 @@ public class MultiFormatIndexer {
         // 검색 실행
         DirectoryReader reader = DirectoryReader.open(index);
         IndexSearcher searcher = new IndexSearcher(reader);
-        TopDocs docs = searcher.search(q, 10);
+        TopDocs docs = searcher.search(q, 100);
         ScoreDoc[] hits = docs.scoreDocs;
 
         // 결과 출력
@@ -119,8 +136,24 @@ public class MultiFormatIndexer {
             System.out.println(d.get("filename") + " - Type: " + d.get("type"));
         }
 
+        // 문서 삭제 예시
+        String filenameToDelete = "Learning Pandas.pdf";  // 삭제할 파일 이름
+        deleteDocumentByFilename(index, filenameToDelete);
+
+        // 다시 검색 실행
+        reader = DirectoryReader.open(index);
+        searcher = new IndexSearcher(reader);
+        docs = searcher.search(q, 100);
+        hits = docs.scoreDocs;
+
+        System.out.println("Found " + hits.length + " hits.");
+        for (ScoreDoc hit : hits) {
+            Document d = searcher.doc(hit.doc);
+            System.out.println(d.get("filename") + " - Type: " + d.get("type"));
+        }
+
         reader.close();
-        
+
         String testText = "이 문장은 한글 텍스트 분석을 위한 테스트입니다.";
         analyzeText(analyzer, testText);
     }
