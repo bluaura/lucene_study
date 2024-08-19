@@ -38,7 +38,7 @@ public class PdfIndexer {
             IndexWriter indexWriter = new IndexWriter(indexDirectory, config);
 
             // PDF, PowerPoint, Excel 파일이 있는 디렉토리 경로
-            Path folderPath = Paths.get("C:\\Users\\c\\Downloads");
+            Path folderPath = Paths.get("C:\\Users\\c\\OneDrive\\문서\\TestDocs");
 
             // 디렉토리 내의 파일들을 처리
             Files.walk(folderPath)
@@ -79,7 +79,7 @@ public class PdfIndexer {
             // 검색 예제 (예: "your search query")
             IndexSearcher searcher = new IndexSearcher(DirectoryReader.open(indexDirectory));
             QueryParser queryParser = new QueryParser("contents", analyzer);
-            Query query = queryParser.parse("your search query");
+            Query query = queryParser.parse("python");
 
             TopDocs results = searcher.search(query, 10);
             for (ScoreDoc scoreDoc : results.scoreDocs) {

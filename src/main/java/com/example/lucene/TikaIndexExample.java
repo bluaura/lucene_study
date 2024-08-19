@@ -53,7 +53,7 @@ public class TikaIndexExample {
         writer.close();
 
         // 검색
-        String querystr = "your search query";
+        String querystr = "어린이";
         Query q = new QueryParser("content", analyzer).parse(querystr);
 
         // 인덱스에서 검색 수행
