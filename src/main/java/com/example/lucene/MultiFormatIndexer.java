@@ -24,9 +24,12 @@ import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.AutoDetectParser;
 import org.apache.tika.parser.ParseContext;
 import org.apache.tika.sax.BodyContentHandler;
+import org.apache.tika.sax.ToXMLContentHandler;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringReader;
 import java.nio.file.Paths;
@@ -62,6 +65,12 @@ public class MultiFormatIndexer {
         // 문서 추가
         writer.addDocument(doc);
         writer.close();
+        
+        // XML 핸들러 사용 - 파싱된 구조를 XML로 출력
+        ToXMLContentHandler handler2 = new ToXMLContentHandler();
+
+        // 파일 파싱 과정 모니터링
+        monitorParsingProcess(parser, file.getCanonicalPath(), handler2, metadata, context);
         }
 
     public static void deleteDocumentByFilename(Directory index, String filename) throws Exception {
@@ -102,13 +111,55 @@ public class MultiFormatIndexer {
         }
     }
 
+    // 파싱 과정을 모니터링하고 출력하는 함수
+    private static void monitorParsingProcess(AutoDetectParser parser, String filePath, 
+    		ToXMLContentHandler handler, Metadata metadata, ParseContext context) {
+    	String outputFile = "parsingOutput.txt";
+
+    	try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile))) {
+            try (FileInputStream stream = new FileInputStream(new File(filePath))) {
+            	writer.write("Starting parsing for file: " + filePath);
+            	writer.newLine();
+                System.out.println("Starting parsing for file: " + filePath);
+
+                // 파싱 시작
+                parser.parse(stream, handler, metadata, context);
+
+                writer.write("Parsing completed. Output:");
+                writer.newLine();
+                System.out.println("Parsing completed. Output:");
+
+                // 파싱된 텍스트 또는 XML 출력
+                writer.write(handler.toString());
+                writer.newLine();
+                System.out.println(handler.toString());
+
+                // 메타데이터 출력
+                writer.write("\nExtracted Metadata:");
+                writer.newLine();
+                System.out.println("\nExtracted Metadata:");
+                String[] metadataNames = metadata.names();
+                for (String name : metadataNames) {
+                	writer.write(name + ": " + metadata.get(name));
+                	writer.newLine();
+                    System.out.println(name + ": " + metadata.get(name));
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+    	}catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void main(String[] args) throws Exception {
         // Lucene 설정
         Analyzer analyzer = new StandardAnalyzer();
         Directory index = new ByteBuffersDirectory();
 
         // 인덱싱할 문서 폴더
-        File docsFolder = Paths.get("C:\\Users\\c\\OneDrive\\문서\\TestDocs").toFile();
+        File docsFolder = Paths.get("C:\\Users\\c\\OneDrive\\문서\\TestDoc2").toFile();
         for (File file : docsFolder.listFiles()) {
             if (!file.isDirectory()) {
             	try {
