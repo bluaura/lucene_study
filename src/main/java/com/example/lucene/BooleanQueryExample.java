@@ -45,14 +45,14 @@ public class BooleanQueryExample {
         writer.addDocument(doc2);
 
         Document doc3 = new Document();
-        doc2.add(new TextField("title", "the third Document", Field.Store.YES));
-        doc2.add(new TextField("content", "This is the boolean query document", Field.Store.YES));
-        writer.addDocument(doc2);
+        doc3.add(new TextField("title", "the third Document", Field.Store.YES));
+        doc3.add(new TextField("content", "This is the boolean query document", Field.Store.YES));
+        writer.addDocument(doc3);
 
         Document doc4 = new Document();
-        doc2.add(new TextField("title", "the fourth Document", Field.Store.YES));
-        doc2.add(new TextField("content", "This is the new document", Field.Store.YES));
-        writer.addDocument(doc2);
+        doc4.add(new TextField("title", "the fourth Document", Field.Store.YES));
+        doc4.add(new TextField("content", "This is the new document", Field.Store.YES));
+        writer.addDocument(doc4);
 
         writer.close();
 
@@ -66,19 +66,20 @@ public class BooleanQueryExample {
 
         // Create queries for each field
         Query titleQuery = titleParser.parse("\"Document 1\"");
-        Query contentQuery = contentParser.parse("\"content of document 1\"");
+        Query contentQuery = contentParser.parse("\"another document\"");
 
         // Combine queries using BooleanQuery
         BooleanQuery combinedQuery = new BooleanQuery.Builder()
-                .add(titleQuery, BooleanClause.Occur.MUST)
-                .add(contentQuery, BooleanClause.Occur.MUST)
+                .add(titleQuery, BooleanClause.Occur.SHOULD)
+                .add(contentQuery, BooleanClause.Occur.SHOULD)
                 .build();
 
         // Perform the search
         ScoreDoc[] hits = searcher.search(combinedQuery, 10).scoreDocs;
 
         // Display the results
-        System.out.println("Results for combined field query:");
+        System.out.println("Results for combined field query: ");
+        System.out.println("Results Count : " + hits.length);
         for (ScoreDoc hit : hits) {
             Document foundDoc = searcher.doc(hit.doc);
             System.out.println("Title: " + foundDoc.get("title"));
