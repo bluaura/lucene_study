@@ -14,6 +14,7 @@ import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
+import org.apache.lucene.search.Explanation;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
@@ -84,6 +85,9 @@ public class BooleanQueryExample {
             Document foundDoc = searcher.doc(hit.doc);
             System.out.println("Title: " + foundDoc.get("title"));
             System.out.println("Content: " + foundDoc.get("content"));
+            
+            Explanation exp = searcher.explain(combinedQuery, hit.doc);
+            exp.toString();
         }
 
         reader.close();
