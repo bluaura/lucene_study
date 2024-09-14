@@ -1,0 +1,22 @@
+tika-config.xml 파일 생성 및 수정
+
+tika-config.xml 파일 생성 및 수정
+Tika에서 사용할 설정 파일인 tika-config.xml을 작성해야 합니다. 아래와 같이 OCR 관련 파서를 비활성화하는 구성을 추가할 수 있습니다.
+
+<?xml version="1.0" encoding="UTF-8"?>
+<properties>
+    <parsers>
+        <parser class="org.apache.tika.parser.DefaultParser">
+            <!-- Exclude OCR Parsers -->
+            <parser-exclude>org.apache.tika.parser.ocr.TesseractOCRParser</parser-exclude>
+        </parser>
+    </parsers>
+</properties>
+
+위 구성 파일에서 TesseractOCRParser를 제외하도록 설정합니다.
+
+Tika 실행 시 구성 파일 적용
+Tika를 실행할 때 이 설정 파일을 적용하려면 Java 코드에서 아래와 같이 Tika를 초기화할 때 설정 파일을 로드해야 합니다.
+
+TikaConfig config = new TikaConfig(new File("path/to/tika-config.xml"));
+Tika tika = new Tika(config);
